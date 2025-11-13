@@ -11,55 +11,29 @@ struct State {
 
 impl State {
     fn new(func: for<'a> fn(&'a Vec3) -> Vec3) -> Self {
-        State {
-            linestrip: vec![Vec3 {
-                x: 1.0,
-                y: 1.0,
-                z: 1.0,
-            }],
-            center: Vec3 {
-                x: 1.0,
-                y: 1.0,
-                z: 1.0,
-            },
-            max_distance: 0.0,
-            max: Vec3 {
-                x: 1.0,
-                y: 1.0,
-                z: 1.0,
-            },
-            min: Vec3 {
-                x: 1.0,
-                y: 1.0,
-                z: 1.0,
-            },
-            attractor: func,
-        }
+        let mut state = Self::default_state();
+        state.attractor = func;
+        state
     }
 
     fn reset(&mut self) {
-        self.linestrip = vec![Vec3 {
-            x: 1.0,
-            y: 1.0,
-            z: 1.0,
-        }];
-        self.center = Vec3 {
-            x: 1.0,
-            y: 1.0,
-            z: 1.0,
-        };
-        self.max_distance = 0.0;
-        self.max = Vec3 {
-            x: 1.0,
-            y: 1.0,
-            z: 1.0,
-        };
-        self.min = Vec3 {
-            x: 1.0,
-            y: 1.0,
-            z: 1.0,
-        };
+        *self = Self::default_state();
+        // Preserve the attractor function
+        self.attractor = std::mem::replace(&mut self.attractor, |_| Vec3::default());
     }
+
+    fn default_state() -> Self {
+        let default_vec = Vec3 { x: 1.0, y: 1.0, z: 1.0 };
+        State {
+            linestrip: vec![default_vec],
+            center: default_vec,
+            max_distance: 0.0,
+            max: default_vec,
+            min: default_vec,
+            attractor: |_| Vec3::default(), // placeholder
+        }
+    }
+}
 
     fn change_attractor(&mut self, func: for<'a> fn(&'a Vec3) -> Vec3) {
         self.attractor = func;
