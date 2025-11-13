@@ -39,8 +39,8 @@ impl State {
     }
 
     fn change_attractor(&mut self, func: for<'a> fn(&'a Vec3) -> Vec3) {
-        self.attractor = func;
         self.reset();
+        self.attractor = func;
     }
 
     fn step(&self) -> Vec3 {
