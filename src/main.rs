@@ -148,7 +148,7 @@ async fn main() {
             camera.target = Vec3::new(0.0, 0.0, 0.0);
         }
 
-        // Calculate the next 30 steps in the Lorenz equation
+        // Calculate the next 30 steps in the current equation
         for _ in 0..50 {
             let new_val = state.step();
 
